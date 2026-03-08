@@ -164,8 +164,10 @@ MyTAGEBase::gtag(ThreadID tid, Addr pc, int bank) const
 MyTAGE::MyTAGE(const MyTAGEParams &p)
     : TAGE(p)
 {
-    // tage pointer is set by TAGE(p) via params.tage which points to
-    // the MyTAGEBase instance declared in BranchPredictor.py
+    // MyTAGEParams re-declares `tage` as a shadow field, so TAGEParams::tage
+    // (read by TAGE's constructor) is left null. Fix by explicitly writing
+    // the MyTAGEBase pointer from the child params into TAGE::tage.
+    tage = p.tage;
 }
 
 } // namespace branch_prediction
