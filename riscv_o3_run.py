@@ -74,6 +74,8 @@ from m5.objects import (
     MultiperspectivePerceptron64KB,
     MultiperspectivePerceptronTAGE8KB,
     MultiperspectivePerceptronTAGE64KB,
+    # Custom
+    MyTAGE,
     # Indirect predictor
     SimpleIndirectPredictor,
     # Loop predictor (for LTAGE)
@@ -102,6 +104,7 @@ COND_BP_MAP = {
     "MultiperspectivePerceptron64KB":     MultiperspectivePerceptron64KB,
     "MultiperspectivePerceptronTAGE8KB":  MultiperspectivePerceptronTAGE8KB,
     "MultiperspectivePerceptronTAGE64KB": MultiperspectivePerceptronTAGE64KB,
+    "MyTAGE":                             MyTAGE,
     "GshareBP":                           None,  # GshareBP is BranchPredictor subclass
 }
 
