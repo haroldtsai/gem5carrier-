@@ -56,6 +56,88 @@
     --bp-type=TAGE_SC_L_64KB
 
 # ==================================================
+# 詳細 Branch Predictor 參數設定
+# ==================================================
+
+# TAGE + 自訂 history table 數量與大小
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE \
+    --tage-history-tables=12 \
+    --tage-min-hist=4 \
+    --tage-max-hist=640 \
+    --tage-counter-bits=3 \
+    --tage-path-hist-bits=27
+
+# LTAGE + loop predictor
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=LTAGE \
+    --tage-min-hist=4 \
+    --tage-max-hist=640
+
+# TAGE_SC_L_64KB (固定 internal structure，不用手動設)
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE_SC_L_64KB
+
+# ==================================================
+# BTB 設定
+# ==================================================
+
+# 大 BTB：8192 entries, 2-way associative
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE \
+    --btb-entries=8192 \
+    --btb-tag-bits=20 \
+    --btb-assoc=2
+
+# ==================================================
+# RAS 設定
+# ==================================================
+
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE \
+    --ras-entries=32
+
+# ==================================================
+# Indirect Branch Predictor (ITTAGE-like) 設定
+# ==================================================
+
+# SimpleIndirectPredictor: 大 cache + longer path history
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE \
+    --indirect-sets=1024 \
+    --indirect-ways=4 \
+    --indirect-path-length=8 \
+    --indirect-ghr-bits=16
+
+# ==================================================
+# 綜合設定：TAGE + 大 BTB + 深 RAS + 強 indirect
+# ==================================================
+
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE_SC_L_64KB \
+    --btb-entries=8192 \
+    --btb-assoc=4 \
+    --ras-entries=32 \
+    --indirect-sets=1024 \
+    --indirect-ways=4 \
+    --indirect-path-length=8 \
+    --num-robs=256
+
+# ==================================================
+# RISC-V instShiftAmt 說明
+# ==================================================
+# --inst-shift-amt=1  → 有 RVC (壓縮指令，預設)
+# --inst-shift-amt=2  → 無 RVC (純 32-bit 指令集)
+# --taken-only-history → 只用 taken branch 更新 GHR (現代 server CPU 做法)
+
+# ==================================================
 # O3 CPU 額外參數
 # ==================================================
 
