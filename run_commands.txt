@@ -1,0 +1,100 @@
+# gem5 RISC-V Run Commands
+# Working directory: /Users/harold/project/gem5
+# gem5 version: 25.1.0.0
+#
+# 注意: configs/example/se.py 已 deprecated，
+#       AtomicSimpleCPU 改用 configs/deprecated/example/se.py
+#       O3 CPU 改用自訂 configs/riscv_o3_run.py
+
+# ==================================================
+# Hello World - AtomicSimpleCPU (fastest, no cache needed)
+# ==================================================
+./build/RISCV/gem5.opt configs/deprecated/example/se.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello
+
+# ==================================================
+# Hello World - O3 CPU (out-of-order)
+# ==================================================
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello
+
+# ==================================================
+# O3 CPU + Branch Predictor 指定
+# 使用自訂 config: configs/riscv_o3_run.py
+#
+# 可用 --bp-type 值:
+#   TournamentBP (預設), LocalBP, BiModeBP, GshareBP,
+#   TAGE, LTAGE,
+#   TAGE_SC_L_8KB, TAGE_SC_L_64KB,
+#   MultiperspectivePerceptron8KB, MultiperspectivePerceptron64KB,
+#   MultiperspectivePerceptronTAGE8KB, MultiperspectivePerceptronTAGE64KB
+# ==================================================
+
+# TournamentBP (預設)
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TournamentBP
+
+# GshareBP
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=GshareBP
+
+# TAGE
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE
+
+# LTAGE
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=LTAGE
+
+# TAGE_SC_L_64KB (最強)
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE_SC_L_64KB
+
+# ==================================================
+# O3 CPU 額外參數
+# ==================================================
+
+# 調整 ROB / 實體暫存器大小
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd tests/test-progs/hello/bin/riscv/linux/hello \
+    --bp-type=TAGE_SC_L_64KB \
+    --num-robs=256 \
+    --num-phys-int-regs=512 \
+    --num-phys-fp-regs=512
+
+# 傳遞 binary 參數
+./build/RISCV/gem5.opt configs/riscv_o3_run.py \
+    --cmd <your_binary> \
+    --options="arg1 arg2" \
+    --bp-type=TournamentBP
+
+# ==================================================
+# 查看 stats
+# ==================================================
+
+# branch predictor 統計
+grep "branchPred" m5out/stats.txt
+
+# IPC
+grep "ipc" m5out/stats.txt
+
+# ==================================================
+# Build Commands
+# ==================================================
+
+# 安裝 scons (macOS)
+brew install scons
+
+# Build RISCV gem5.opt (推薦，開發用)
+scons build/RISCV/gem5.opt -j$(sysctl -n hw.ncpu)
+
+# Build RISCV gem5.debug (最慢，含 debug symbols)
+scons build/RISCV/gem5.debug -j$(sysctl -n hw.ncpu)
+
+# Build RISCV gem5.fast (最快，無 assert)
+scons build/RISCV/gem5.fast -j$(sysctl -n hw.ncpu)
