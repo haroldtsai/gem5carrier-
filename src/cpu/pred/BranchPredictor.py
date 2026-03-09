@@ -361,6 +361,20 @@ class TAGE(ConditionalPredictor):
     tage = Param.TAGEBase(TAGEBase(), "Tage object")
 
 
+class MyTAGEBase(TAGEBase):
+    type = "MyTAGEBase"
+    cxx_class = "gem5::branch_prediction::MyTAGEBase"
+    cxx_header = "cpu/pred/my_tage.hh"
+
+
+class MyTAGE(TAGE):
+    type = "MyTAGE"
+    cxx_class = "gem5::branch_prediction::MyTAGE"
+    cxx_header = "cpu/pred/my_tage.hh"
+
+    tage = Param.TAGEBase(MyTAGEBase(), "MyTAGEBase object")
+
+
 class LTAGE_TAGE(TAGEBase):
     nHistoryTables = 12
     minHist = 4
