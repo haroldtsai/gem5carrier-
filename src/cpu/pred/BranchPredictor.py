@@ -366,6 +366,17 @@ class MyTAGEBase(TAGEBase):
     cxx_class = "gem5::branch_prediction::MyTAGEBase"
     cxx_header = "cpu/pred/my_tage.hh"
 
+    # 8 TAGE tables (T1–T8) + 1 bimodal base = 9 total
+    nHistoryTables = 8
+    # index 0 = bimodal (log2 size=13 → 8192 entries)
+    # index 1–8 = TAGE tables (log2 size=9 → 512 entries each, matches 9-bit gindex)
+    logTagTableSizes = [13, 9, 9, 9, 9, 9, 9, 9, 9]
+    # tag width: 0 for bimodal, 13 bits for TAGE tables (matches gtag output)
+    tagTableTagWidths = [0, 13, 13, 13, 13, 13, 13, 13, 13]
+    # history lengths: unused by our custom gindex/gtag but required by TAGEBase
+    minHist = 4
+    maxHist = 640
+
 
 class MyTAGE(TAGE):
     type = "MyTAGE"
