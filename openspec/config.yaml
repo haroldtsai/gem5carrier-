@@ -1,0 +1,16 @@
+schema: spec-driven
+
+context: |
+  gem5 branch predictor 研究專案
+  語言：C++17，gem5 coding style
+  每個 change 對應一個獨立的 predictor 演算法研究
+
+rules:
+  proposal:
+    - 必須包含「演算法概述」section 說明硬體行為
+    - 所有參數（table 大小、history 長度等）必須明確列出，不可留 TBD
+    - 必須列出「不在此次範圍內」的項目
+  tasks:
+    - 每個 task 只對應單一檔案的修改
+    - 實作類 task 必須註明對應的 spec requirement
+    - 測試 task 必須與實作 task 分開列出
